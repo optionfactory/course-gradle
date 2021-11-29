@@ -1,0 +1,52 @@
+import java.nio.file.Files
+import java.nio.file.Paths
+defaultTasks 'hello'
+task hello {
+    doFirst{
+        println "${buildscript.sourceFile.path} says hello, '${this}' here"
+    }
+}
+
+def scriptNames = ["init", "gggInit", "lllInit", "settings"]
+def folderLocations= [
+    gradle.gradleHomeDir,
+    "$gradle.gradleHomeDir/init.d",
+    gradle.gradleUserHomeDir, 
+    "$gradle.gradleUserHomeDir/init.d"]
+
+def createFullScriptName = {folderLocation, scriptName->"$folderLocation/${scriptName}.gradle"}
+def toBackupName = { fullScriptName-> fullScriptName.replaceAll(/.gradle$/,"-gradle.bck")}
+task createInitFiles{
+    doLast {
+        folderLocations.each({ fl ->
+            scriptNames.each{ sn ->
+                def fullScriptName = createFullScriptName(fl, sn)
+                var currentScript = new File(fullScriptName)
+                if(currentScript.exists()){
+                    def backupFileName = toBackupName(fullScriptName)
+                    println "Backing up $fullScriptName as $backupFileName" 
+                    currentScript.renameTo backupFileName
+                }
+                println "Creating $fullScriptName" 
+                new File(fullScriptName) << "println \"\${buildscript.sourceFile.path} says hello, '\${this}' here\""
+            }
+        })  
+    }
+}
+task removeInitFiles{
+    doLast {
+        folderLocations.each({ fl ->
+            scriptNames.each{ sn ->
+                def fullScriptName = createFullScriptName(fl, sn)
+                println "removing ${fullScriptName}"
+                new File(fullScriptName).delete();
+                def backupFileName = toBackupName(fullScriptName)
+                def backupFile = new File(backupFileName)
+                if(backupFile.exists()){
+                    println "Restoring backed up file '$backupFileName' as '$fullScriptName'"
+                    backupFile.renameTo fullScriptName
+                }
+            }
+        })  
+    }
+}
