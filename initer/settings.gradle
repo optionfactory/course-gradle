@@ -1,2 +1,0 @@
-println "${buildscript.sourceFile.path} says hello, '${this}' here"
-rootProject.name = 'initer'
