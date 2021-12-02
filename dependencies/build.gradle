@@ -1,38 +1,51 @@
+//repositories define where to go and search for dependencies
 repositories{
+    //Maven Central is the most common one
     mavenCentral()
+    //Google's maven repo
     google()
+    //Local maven repo. Avoid using this, kills reproducibility
     mavenLocal()
+    //Folder of dependencies (no dependency resolution possible)
     flatDir {
         dirs '~/.m2/repository'
     }
+    //Custom maven repo
     maven {
         url "https://repo.spring.io/release"
     }
+    //... and many others
 }
 
+//Configurations are bundles of files.
 configurations {
-    testing{
+    //Creates a configuration named "innerConf"
+    innerConf{
         // This configuration is an "outgoing" configuration, it's not meant to be resolved
-        //e.g.: a dependency graph can be computed
+        // A dependency graph cannot be computed
         canBeResolved = false
         // Can be seen and referenced from other projects which reference this
-        canBeConsumed = false
-        transitive = true
+        canBeConsumed = true
     }
-    smokeTest.extendsFrom testing
+
+    // Resolvable configuration named "innerConf", which extends the other one
+    finalConf.extendsFrom innerConf
 }
 
+//Effective dependencies, assigned to specific configurations
 dependencies {
-    testing('junit:junit:4.13') {
+    //adds junit dependency to the "innerConf" configuration
+    innerConf('commons-logging:commons-logging:1.2') {
+        //Transitive dependencies will be ignored
         transitive=false
     }
-    smokeTest 'org.apache.httpcomponents:httpclient:4.5.5'
-}
-
+    //Alternative dependency coordinates format
+    finalConf group: 'org.springframework', name:'spring-core', version:'4.1.1.RELEASE'}
 tasks.register('copyDeps', Copy) {
     group "Actions"
     description "Copies dependencies to target folder"
-    from configurations.smokeTest
+    //copies all files referenced by this configuration
+    from configurations.finalConf
     into 'deps'
 }
 
@@ -67,11 +80,13 @@ ${prefix}  },
     }
 }
 
+//Dependencies can also be imported to be used within the script itself:
+
 buildscript {
-    repositories{
-        mavenCentral()
-    }
-    dependencies {
-        classpath group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
-    }
+   repositories{
+       mavenCentral()
+   }
+   dependencies {
+       classpath group: 'org.apache.commons', name: 'commons-lang3', version: '3.0'
+   }
 }

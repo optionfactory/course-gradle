@@ -36,3 +36,14 @@ jar {
     from {project.configurations.runtimeClasspath.collect {File file -> project.zipTree(file) } }      
 }
 
+//Changing the default project structure:
+sourceSets {
+    main {
+        java {
+            srcDirs = ['src/java']
+        }
+        resources {
+            srcDirs = ['src/resources']
+        }
+    }
+}
