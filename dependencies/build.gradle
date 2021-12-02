@@ -1,0 +1,68 @@
+repositories{
+    mavenCentral()
+    google()
+    mavenLocal()
+    flatDir {
+        dirs '~/.m2/repository'
+    }
+    maven {
+        url "https://repo.spring.io/release"
+    }
+}
+
+configurations {
+    testing{
+        // This configuration is an "outgoing" configuration, it's not meant to be resolved
+        //e.g.: a dependency graph can be computed
+        canBeResolved = false
+        // Can be seen and referenced from other projects which reference this
+        canBeConsumed = false
+        transitive = true
+    }
+    smokeTest.extendsFrom testing
+}
+
+dependencies {
+    testing('junit:junit:4.13') {
+        transitive=false
+    }
+    smokeTest 'org.apache.httpcomponents:httpclient:4.5.5'
+}
+
+tasks.register('copyDeps', Copy) {
+    group "Actions"
+    description "Copies dependencies to target folder"
+    from configurations.smokeTest
+    into 'deps'
+}
+
+tasks.register('clean') {
+    group "Actions"
+    description "Cleans dependencies copied to target folder"
+    delete fileTree('deps')
+}
+
+task printConfs {
+    group "Help"
+    description "Inspects the configurations hierarchy"
+    ext.buildConfsDetails= {String prefix, confs->
+        def res = ""
+        res+="""[
+"""
+        confs.each {
+            def subConfs = buildConfsDetails("${prefix}     ",it.getExtendsFrom())
+            res=res+ """\
+${prefix}  ${it.name}: {
+${prefix}    resolvable: ${it.canBeResolved},
+${prefix}    transitive: ${it.transitive},
+${prefix}    visible: ${it.visible},
+${prefix}    extendsFrom: ${it.getExtendsFrom()?subConfs:"-"}
+${prefix}  },
+"""
+            }
+            res+= "${prefix}]"        
+    }
+    doLast {
+        println buildConfsDetails("", configurations)
+    }
+}
