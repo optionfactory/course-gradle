@@ -1,4 +1,4 @@
-//lib-module
+//lib-module/build.gradle
 dependencies {
     // This dependency is used by the application.
     implementation 'com.google.guava:guava:28.0-jre'
