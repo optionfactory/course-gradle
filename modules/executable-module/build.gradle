@@ -1,0 +1,15 @@
+configurations {
+    fatjar {
+        extendsFrom implementation
+    }
+}
+
+jar {
+    dependsOn configurations.fatjar
+    manifest {
+        attributes 'Main-Class': 'net.optionfactory.Main'
+    }
+    from {
+        configurations.fatjar.collect { it.isDirectory() ? it : zipTree(it) }     
+    }
+}

@@ -1,0 +1,3 @@
+rootProject.name = 'modules'
+include("lib-module")
+include("executable-module")
