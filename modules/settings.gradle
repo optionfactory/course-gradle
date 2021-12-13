@@ -9,6 +9,6 @@ in order to not mix them up when you have multiple projects open in the editor,
 the following configuration can be added to your root project's
 settings.gradle
 */
-// rootProject.children.each { subproject ->
-//     subproject.buildFileName = "${subproject.name}.gradle"
-// }
+rootProject.children.each { subproject ->
+    subproject.buildFileName = "${subproject.name}.gradle"
+}

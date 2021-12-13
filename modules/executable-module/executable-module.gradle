@@ -1,3 +1,4 @@
+
 //executable-module/build.gradle
 configurations {
     fatjar {

@@ -4,26 +4,8 @@ allprojects {
 }
 
 project(':lib-module') {
-   //https://discuss.gradle.org/t/when-should-we-use-java-plugin-and-when-java-library-plugin/25377
+    //https://discuss.gradle.org/t/when-should-we-use-java-plugin-and-when-java-library-plugin/25377
     apply plugin: 'java-library'
-    //Publishing to maven minimal conf (more on https://docs.gradle.org/current/userguide/publishing_maven.html)
-    apply plugin: 'maven-publish'
-
-    java {
-        withJavadocJar()
-        withSourcesJar()
-    }
-    publishing {
-        publications {
-            maven(MavenPublication) {
-                groupId = 'net.optionfactory'
-                artifactId = 'lib-module'
-                version = '0.0.1-SNAPSHOT'
-
-                from components.java
-            }
-        }
-    }
 }
 
 project(':executable-module') {  
@@ -37,10 +19,11 @@ subprojects {
     repositories {
         mavenCentral()
     }
+
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8   
-
     compileJava.options.encoding = "UTF-8"
     compileTestJava.options.encoding = "UTF-8"
+
 }
 

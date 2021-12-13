@@ -37,13 +37,13 @@ jar {
 }
 
 //Changing the default project structure:
-sourceSets {
-    main {
-        java {
-            srcDirs = ['src/java']
-        }
-        resources {
-            srcDirs = ['src/resources']
-        }
-    }
-}
+// sourceSets {
+//     main {
+//         java {
+//             srcDirs = ['src/main/java']
+//         }
+//         resources {
+//             srcDirs = ['src/main/resources']
+//         }
+//     }
+// }

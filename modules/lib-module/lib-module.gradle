@@ -1,0 +1,28 @@
+//Publishing to maven minimal conf (more on https://docs.gradle.org/current/userguide/publishing_maven.html)
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId = 'net.optionfactory'
+            artifactId = 'lib-module'
+            version = '0.0.1-SNAPSHOT'
+
+            from components.java
+        }
+    }
+}
+
+//lib-module/build.gradle
+dependencies {
+    // This dependency is used by the application.
+    implementation 'com.google.guava:guava:28.0-jre'
+
+    // Use JUnit test framework
+    testImplementation 'junit:junit:4.12'
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}

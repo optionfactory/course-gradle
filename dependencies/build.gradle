@@ -36,11 +36,18 @@ configurations {
 dependencies {
     //adds junit dependency to the "innerConf" configuration
     innerConf('commons-logging:commons-logging:1.2') {
-        //Transitive dependencies will be ignored
         transitive=false
+        // version {
+        //     strictly '1.1.3'
+        // }
     }
     //Alternative dependency coordinates format
-    finalConf group: 'org.springframework', name:'spring-core', version:'4.1.1.RELEASE'}
+    // finalConf group: 'org.springframework', name:'spring-core', version:'4.1.1.RELEASE'
+    finalConf(group: 'org.springframework', name:'spring-core', version:'4.1.1.RELEASE')
+//     {
+//         exclude group: 'commons-logging', module: 'commons-logging'
+//     }
+}
 tasks.register('copyDeps', Copy) {
     group "Actions"
     description "Copies dependencies to target folder"
@@ -76,7 +83,7 @@ ${prefix}  },
             res+= "${prefix}]"        
     }
     doLast {
-        println buildConfsDetails("", configurations)
+        println buildConfsDetails("", project.configurations)
     }
 }
 

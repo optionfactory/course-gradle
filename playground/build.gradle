@@ -1,0 +1,16 @@
+task otherTask{
+    dependsOn "test"
+    println "other"
+    doLast {
+        println "otherAction"
+    }
+}
+
+task test {
+    println "2"
+    doLast {
+        println "1"
+    }
+}
+
+println "3"

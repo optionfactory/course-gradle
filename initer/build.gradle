@@ -1,6 +1,8 @@
 import java.nio.file.Files
 import java.nio.file.Paths
+
 defaultTasks 'hello'
+
 task hello {
     println "${buildscript.sourceFile.path} says hello during configuration phase, '${this}' here"
     doFirst{
@@ -8,7 +10,6 @@ task hello {
     }
 }
 
-def scriptNames = ["init", "gggInit", "lllInit", "settings"]
 def folderLocations= [
     "$gradle.gradleHomeDir",
     "$gradle.gradleHomeDir/init.d",
@@ -17,8 +18,11 @@ def folderLocations= [
     "$gradle.rootProject.projectDir", 
     "$gradle.rootProject.projectDir/init.d"]
 
+def scriptNames = ["init", "gggInit", "lllInit", "settings"]
+
 def createFullScriptName = {folderLocation, scriptName->"$folderLocation/${scriptName}.gradle"}
 def toBackupName = { fullScriptName-> fullScriptName.replaceAll(/.gradle$/,"-gradle.bck")}
+
 task createInitFiles{
     doLast {
         folderLocations.each({ fl ->
