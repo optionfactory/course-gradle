@@ -2,3 +2,13 @@
 rootProject.name = 'modules'
 include("lib-module")
 include("executable-module")
+
+/*
+Should you want to have a different script name for each project,
+in order to not mix them up when you have multiple projects open in the editor,
+the following configuration can be added to your root project's
+settings.gradle
+*/
+// rootProject.children.each { subproject ->
+//     subproject.buildFileName = "${subproject.name}.gradle"
+// }
